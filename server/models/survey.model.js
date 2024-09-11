@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 
 const questionSchema = new mongoose.Schema({
-    text: {
+    question: {
         type: String,
         required: true,
     },
 
-    questionType: {
+    type: {
         type: String,
         enum: ['text', 'checkbox', 'radio', 'select', 'textarea'],
         required: true,
     },
 
-    options: [String],
+    options: [{}],
 
 });
 

@@ -8,7 +8,7 @@ const SignIn = async (req, res) => {
 
     const getUser = await userModel.findOne({ email });
     if (!getUser) {
-        throw "User Not Found";
+        return res.status(400).json({ status: "Failed", error: "User Not Found" });
     }
 
     const comparePassword = await bcrypt.compare(password, getUser.password);

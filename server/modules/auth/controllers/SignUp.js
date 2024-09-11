@@ -11,7 +11,7 @@ const SignUp = async (req, res) => {
 
   const existingUser = await userModel.findOne({ email: email });
   if (existingUser) {
-    throw "User Already Exist, try to Login or use another account";
+    return res.status(400).json({status: 'Failed', message: 'User Already Exist, try to Login or use another account'});
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);

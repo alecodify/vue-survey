@@ -2,19 +2,10 @@ import mongoose from "mongoose";
 import { uploadToCloudinary } from '../../../middleware/imageUpload.js';
 
 const CreateSurvey = async (req, res) => {
-    if (!req.user.isAdmin) {
-        return res.status(403).json({ message: 'Access denied. Admins only.' });
-    }
-
-    const { title, expireDate, isActive, questions } = req.body;
-    const image = null;
+    const { title, expireDate, isActive, questions, image } = req.body;
     const surveyModel = mongoose.model('survey');
 
     try {
-        if (req.file) {
-            const result = await uploadToCloudinary(req.file.buffer);
-            image = result.secure_url;
-        }
 
         const newSurvey = await surveyModel.create({
             title,

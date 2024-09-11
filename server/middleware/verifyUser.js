@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken';
 
 const verifyUser = (req, res, next) => {
-    const accessToken = res.cookies.accessToken;
+    const accessToken = req.cookies.accessToken;
 
     if(!accessToken) throw 'AccessToken is Required';
 

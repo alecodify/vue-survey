@@ -3,5 +3,5 @@
 </script>
 
 <template>
-   <h1>Hello</h1>
+   <router-view :key="$route.path"></router-view>
 </template>
