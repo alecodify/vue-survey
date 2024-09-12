@@ -1,6 +1,7 @@
 <script setup>
     import Card from '@/components/Card.vue';
     import PageComponent from '@/components/PageComponent.vue';
+    import Button from '@/components/Button.vue';
     import { computed } from 'vue';
     import { useStore } from 'vuex';
 
@@ -19,14 +20,13 @@
         return date.toLocaleDateString(undefined, options);
     };
 
-
-
     store.dispatch('getDashboardData');
 </script>
 
 <template>
     <PageComponent title="Dashboard">
         <div v-if="loading" class="flex justify-center">Loading...</div>
+
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-gray-700">
             <Card class="order-1 lg:order-2" style="animation-delay: 0.1s">
                 <template v-slot:title>Total Surveys</template>
@@ -59,22 +59,14 @@
                         <div>Status:</div>
                         <div>{{ data.latestSurvey.isActive ? "Active" : "Draft" }}</div>
                     </div>
-                    <!-- <div class="flex justify-between text-sm mb-1">
-                        <div>Questions:</div>
-                        <div>{{ data.latestSurvey.questions }}</div>
-                    </div>
-                    <div class="flex justify-between text-sm mb-3">
-                        <div>Answers:</div>
-                        <div>{{ data.latestSurvey.answers }}</div>
-                    </div> -->
                     <div class="flex justify-between">
-                        <Button :to="{ name: 'SurveyView', params: { id: data.latestSurvey.id } }" link>
-                            <i class="pi pi-pencil text-sm"></i>
+                        <Button :to="{ name: 'SurveyView', params: { id: data.latestSurvey._id } }" link>
+                            <i class="pi pi-pencil text-sm mr-1 mt-1"></i>
                             Edit Survey
                         </Button>
 
                         <Button link>
-                            <i class="pi pi-eye text-sm"></i>
+                            <i class="pi pi-eye text-sm mr-1 mt-1"></i>
                             View Answers
                         </Button>
                     </div>
@@ -105,6 +97,7 @@
                         </small>
                     </a>
                 </div>
+
                 <div v-else class="text-gray-600 text-center py-16">
                     Your don't have answers yet
                 </div>

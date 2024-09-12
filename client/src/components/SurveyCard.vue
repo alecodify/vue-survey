@@ -1,11 +1,15 @@
 <script setup>
     import Button from './Button.vue';
+    import { defineProps, defineEmits } from 'vue';
 
     const { survey } = defineProps({
-        survey: Object,
+        survey: {
+            type: Object
+        }
     })
 
-    const emit = defineEmits(['delete','edit'])
+    const emit = defineEmits(['delete', 'edit']);
+
 </script>
 
 <template>
@@ -15,17 +19,17 @@
         <div v-html="survey.description" class="overflow-hidden flex-1"></div>
 
         <div class="flex justify-between items-center mt-3">
-            <Button :to="{name: 'SurveyView', params: { id: survey.id } }">
-                <i class="pi pi-pen-to-square text-white text-lg"></i>
+            <Button :to="{name: 'SurveyView', params: { id: survey._id } }">
+                <i class="pi pi-pen-to-square text-white text-lg mr-1"></i>
                 Edit
             </Button>
 
-            <div class="flex items-center">
-                <Button :href="`/view/survey/${survey.slug}`">
+            <div class="flex items-center gap-4">
+                <Button :href="`/view/survey/${survey._id}`" circle color="green">
                     <i class="pi pi-external-link text-white text-lg"></i>
                 </Button>
 
-                <Button v-if="survey.id" @click="emit('delete', survey)" circle link color="red">
+                <Button v-if="survey._id" @click="emit('delete', survey)" circle color="red">
                     <i class="pi pi-trash text-white text-lg"></i>
                 </Button>
             </div>

@@ -14,7 +14,7 @@ import Dashboard from "./controllers/Dashboard.js";
 const surveyRoutes = express.Router();
 
 surveyRoutes.post('/create', verifyUser, verifyAdmin, imageUpload.single('image'), CreateSurvey);
-surveyRoutes.post('/:id', verifyUser, Response);
+surveyRoutes.post('/response/:id', verifyUser, Response);
 surveyRoutes.put('/:id', verifyUser, verifyAdmin, imageUpload.single('image'), UpdateSurvey)
 
 surveyRoutes.get('/dashboard', Dashboard);

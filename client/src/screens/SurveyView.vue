@@ -14,7 +14,6 @@
 
     let model = ref({
         title: "",
-        slug: "",
         status: false,
         description: null,
         image: null,
@@ -73,13 +72,15 @@
         });
     }
 
-    function saveSurvey() {
-        let action = "created";
-
-        if (model.value.id) {
-            action = "updated";
+    function handleSubmit() {
+        if (route.params.id) {
+            updateSurvey();
+        } else {
+            saveSurvey();
         }
+    }
 
+    function saveSurvey() {
         store.dispatch("saveSurvey", { ...model.value }).then(({ data }) => {
             store.commit("notify", { type: "success",  message: "The survey was successfully " + action, });
               router.push({ name: "SurveyView", params: { id: data.data.id },
@@ -87,10 +88,18 @@
         });
     }
 
+    function updateSurvey() {
+        store.dispatch("updateSurvey", { ...model.value }).then(({ data }) => {
+            store.commit("notify", { type: "success",  message: "The survey was updated successfully " + action, });
+              router.push({ name: "SurveyView", params: { id: data.data.id },
+            });
+        });
+    }
+
     function deleteSurvey() {
         if (confirm(`Are you sure you want to delete this survey? Operation can't be undone!!`)) {
-            store.dispatch("deleteSurvey", model.value.id).then(() => {
-                router.push({ name: "Surveys", });
+            store.dispatch("deleteSurvey", model.value._id).then(() => {
+                router.push({ name: "Surveys" });
             });
         }
     }
@@ -104,13 +113,13 @@
                 <h1 class="text-3xl font-bold text-gray-900">{{ route.params.id ? model.title : "Create a Survey" }}</h1>
                 
                 <div class="flex">
-                    <Button v-if="model.slug" link :href="`/view/survey/${model.slug}`" target="_blank" class="mr-2">
-                        <i class="pi pi-external-link text-lg text-white"></i>
+                    <Button v-if="route.params.id" link :href="`/view/survey/${route.params.id}`" target="_blank" class="mr-2">
+                        <i class="pi pi-external-link text-md mr-2 mt-1 text-blue-500"></i>
                         View Public Link
                     </Button>
 
                     <Button v-if="route.params.id" color="red" @click="deleteSurvey()">
-                        <i class="pi pi-trash text-lg text-white"></i>
+                        <i class="pi pi-trash text-lg text-white mr-1"></i>
                         Delete
                     </Button>
                 </div>
@@ -119,7 +128,7 @@
 
         <div v-if="surveyLoading" class="flex justify-center">Loading...</div>
 
-        <form v-else @submit.prevent="saveSurvey" class="animate-fade-in-down">
+        <form v-else @submit.prevent="handleSubmit" class="animate-fade-in-down">
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                     <div>
@@ -189,7 +198,7 @@
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                     <Button>
                         <i class="pi pi-save text-sx mr-2 mt-1"></i>
-                        Save
+                        {{ route.params.id ? "Update" : "Save" }}
                     </Button>
                 </div>            
             </div>

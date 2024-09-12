@@ -13,7 +13,6 @@ const store = createStore({
     },
     surveys: {
       loading: false,
-      links: [],
       data: [],
     },
     currentSurvey: {
@@ -75,7 +74,7 @@ const store = createStore({
       commit('dashboardLoading', true);
       try {
         const { data } = await axiosClient.get('/survey/dashboard');
-        console.log(data); 
+        // console.log(data); 
         commit('setDashboardData', data);
       } catch (error) {
         throw error;
@@ -83,10 +82,11 @@ const store = createStore({
         commit('dashboardLoading', false);
       }
     },
-    async getSurveys({ commit }, { url = '/survey/' } = {}) {
+    async getSurveys({ commit }, url = '/survey/') {
       commit('setSurveysLoading', true);
       try {
         const { data } = await axiosClient.get(url);
+        // console.log(data); 
         commit('setSurveys', data);
       } catch (error) {
         throw error;
@@ -105,22 +105,12 @@ const store = createStore({
         commit('setCurrentSurveyLoading', false);
       }
     },
-    async getSurveyBySlug({ commit }, slug) {
-      commit('setCurrentSurveyLoading', true);
-      try {
-        const { data } = await axiosClient.get(`/survey/by-slug/${slug}`);
-        commit('setCurrentSurvey', data);
-      } catch (error) {
-        throw error;
-      } finally {
-        commit('setCurrentSurveyLoading', false);
-      }
-    },
     async saveSurvey({ commit }, survey) {
       try {
         const formData = new FormData();
     
         formData.append('title', survey.title);
+        formData.append('description', survey.description);
         formData.append('expireDate', survey.expire_date);
         formData.append('isActive', survey.status);
         formData.append('questions', JSON.stringify(survey.questions));
@@ -135,11 +125,39 @@ const store = createStore({
           },
         });
     
-        console.log(response);
+        // console.log(response);
         commit('setCurrentSurvey', response.data);
         return response;
       } catch (error) {
         console.error('Error saving survey:', error);
+        throw error;
+      }
+    },
+    async updateSurvey({ commit }, survey) {
+      try {
+        const formData = new FormData();
+    
+        formData.append('title', survey.title);
+        formData.append('description', survey.description);
+        formData.append('expireDate', survey.expire_date);
+        formData.append('isActive', survey.status);
+        formData.append('questions', JSON.stringify(survey.questions));
+    
+        if (survey.image) {
+          formData.append('image', survey.image);
+        }
+    
+        let response = await axiosClient.put(`/survey/${survey._id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+    
+        // console.log(response);
+        commit('setCurrentSurvey', response.data);
+        return response;
+      } catch (error) {
+        console.error('Error update survey:', error);
         throw error;
       }
     },
@@ -152,8 +170,10 @@ const store = createStore({
       }
     },
     async saveSurveyAnswer({ commit }, { surveyId, answers }) {
+      // console.log(surveyId, answers);
       try {
-        await axiosClient.post(`/survey/${surveyId}/answer`, { answers });
+       const response =  await axiosClient.post(`/survey/response/${surveyId}`, { responses: answers });
+       return response;
       } catch (error) {
         throw error;
       }
@@ -182,9 +202,8 @@ const store = createStore({
     setSurveysLoading(state, loading) {
       state.surveys.loading = loading;
     },
-    setSurveys(state, surveys) {
-      // state.surveys.links = surveys.meta?.links || [];
-      state.surveys.data = surveys.data;
+    setSurveys(state, data) {
+      state.surveys.data = data;
     },
     setCurrentSurveyLoading(state, loading) {
       state.currentSurvey.loading = loading;

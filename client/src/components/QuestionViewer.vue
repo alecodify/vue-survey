@@ -1,5 +1,5 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, defineEmits, defineProps } from 'vue';
 
     const { question, index, modelValue } = defineProps({
         question: Object,
@@ -18,8 +18,8 @@
     function onCheckboxChange($event) {
         const selectedOptions = [];
         for (let uuid in model.value) {
-            if (model.value[uuid]) {
-            selectedOptions.push(uuid);
+                if (model.value[uuid]) {
+                selectedOptions.push(uuid);
             }
         }
         emits("update:modelValue", selectedOptions);
@@ -37,15 +37,15 @@
             <div v-if="question.type === 'select'">
                 <select :value="modelValue" @change="emits('update:modelValue', $event.target.value)" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="">Please Select</option>
-                    <option v-for="option in question.data.options" :key="option.uuid" :value="option.text">
+                    <option v-for="option in question.options" :key="option.uuid" :value="option.text">
                         {{ option.text  }}
                     </option>
                 </select>
             </div>
 
             <div v-else-if="question.type === 'radio'">
-                <div v-for="(option, ind) of question.data.options" :key="option.uuid" class="flex items-center">
-                    <input type="radio" :id="option.uuid" :name="'question' + question.id" :value="option.text" @change="emits('update:modelValue', $event.target.value)"
+                <div v-for="(option, ind) of question.options" :key="option.uuid" class="flex items-center">
+                    <input type="radio" :id="option.uuid" :name="'question' + question._id" :value="option.text" @change="emits('update:modelValue', $event.target.value)"
                         class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
                     >
                     <label :for="option.uuid" class="ml-3 block text-sm font-medium text-gray-700">{{ option.text }}</label>
@@ -53,7 +53,7 @@
             </div>
 
             <div v-else-if="question.type === 'checkbox'">
-                <div v-for="(option, ind) of question.data.options" :key="option.uuid" class="flex items-center">
+                <div v-for="(option, ind) of question.options" :key="option.uuid" class="flex items-center">
                     <input :id="option.uuid" type="checkbox" v-model="model[option.text]" @change="onCheckboxChange"
                         class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
                     <label :for="option.uuid" class="ml-3 block text-sm font-medium text-gray-700">{{ option.text }}</label>

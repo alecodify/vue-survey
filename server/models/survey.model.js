@@ -19,16 +19,30 @@ const questionSchema = new mongoose.Schema({
 const responseSchema = new mongoose.Schema({
     user: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'user' 
+        ref: 'user',
+        required: true
     }, 
 
-    answers: [
-        { type: mongoose.Schema.Types.Mixed }
-    ], 
+    survey: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'survey',
+        required: true
+    },
+
+    answers: {
+        type: Map,
+        of: mongoose.Schema.Types.Mixed,
+        required: true
+    }, 
 });
 
 const surveySchema = new mongoose.Schema({
     title: {
+        type: String,
+        required: true,
+    },
+
+    description: {
         type: String,
         required: true,
     },

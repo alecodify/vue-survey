@@ -5,7 +5,7 @@ const Dashboard = async(req, res) => {
 
     try {
         const totalSurveys = await surveyModel.countDocuments();
-        const latestSurvey = await surveyModel.findOne().sort({ createAt: -1 });
+        const latestSurvey = await surveyModel.findOne().sort({ createdAt: -1 });
 
         const totalAnswers = await surveyModel.aggregate([
             { $unwind: "$responses" },
