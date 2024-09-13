@@ -17,8 +17,7 @@
         status: false,
         description: null,
         image: null,
-        image_url: null,
-        expire_date: null,
+        expireDate: null,
         questions: [],
     });
 
@@ -36,8 +35,6 @@
         const reader = new FileReader();
         reader.onload = () => {
             model.value.image = reader.result;
-
-            model.value.image_url = reader.result;
             ev.target.value = "";
         };
         reader.readAsDataURL(file);
@@ -81,18 +78,24 @@
     }
 
     function saveSurvey() {
-        store.dispatch("saveSurvey", { ...model.value }).then(({ data }) => {
-            store.commit("notify", { type: "success",  message: "The survey was successfully " + action, });
-              router.push({ name: "SurveyView", params: { id: data.data.id },
-            });
+        store.dispatch("saveSurvey", { ...model.value }).then((response) => {
+            if (response.data.status === 'Success') {
+                store.commit("notify", { type: "success",  message: "The survey was successfully "});
+                router.push({ name: "Surveys" });
+            } else {
+                store.commit("notify", { type: "error",  message: "The survey does not save, something went wrong. "});
+            }
         });
     }
 
     function updateSurvey() {
-        store.dispatch("updateSurvey", { ...model.value }).then(({ data }) => {
-            store.commit("notify", { type: "success",  message: "The survey was updated successfully " + action, });
-              router.push({ name: "SurveyView", params: { id: data.data.id },
-            });
+        store.dispatch("updateSurvey", { ...model.value }).then((response) => {
+            if (response.data.status === 'Success') {
+                store.commit("notify", { type: "success",  message: "The survey updated successfully " });
+                router.push({ name: "Surveys" });
+            } else {
+                store.commit("notify", { type: "error",  message: "The survey does not update, something went wrong. "});
+            }
         });
     }
 
@@ -134,7 +137,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700"> Image </label>
                         <div class="mt-1 flex items-center">
-                          <img v-if="model.image_url" :src="model.image_url" :alt="model.title" class="w-64 h-48 object-cover" />
+                          <img v-if="model.image" :src="model.image" :alt="model.title" class="w-64 h-48 object-cover" />
                           <span v-else class="flex items-center justify-center h-12 w-12 rounded-full overflow-hidden bg-gray-100" >
                             <i class="pi pi-image text-xl text-gray-500 "></i>
                           </span>
@@ -162,7 +165,7 @@
 
                     <div>
                         <label for="expire_date" class="block text-sm font-medium text-gray-700" >Expire Date</label>
-                        <input type="date" name="expire_date" id="expire_date" v-model="model.expire_date"
+                        <input type="date" name="expire_date" id="expire_date" v-model="model.expireDate"
                           class="mt-1 outline-none block w-full shadow-sm sm:text-sm border-2 bg-transparent py-1 px-2  border-gray-300 rounded-md"
                         />
                     </div>

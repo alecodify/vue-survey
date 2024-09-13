@@ -9,6 +9,7 @@
 
     const loading = computed(() => store.state.dashboard.loading);
     const data = computed(() => store.state.dashboard.data);
+    const isAdmin = computed(() => store.state.user.isAdmin);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -19,6 +20,11 @@
         };
         return date.toLocaleDateString(undefined, options);
     };
+
+    const formatTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
 
     store.dispatch('getDashboardData');
 </script>
@@ -59,7 +65,7 @@
                         <div>Status:</div>
                         <div>{{ data.latestSurvey.isActive ? "Active" : "Draft" }}</div>
                     </div>
-                    <div class="flex justify-between">
+                    <div v-if="isAdmin" class="flex justify-between">
                         <Button :to="{ name: 'SurveyView', params: { id: data.latestSurvey._id } }" link>
                             <i class="pi pi-pencil text-sm mr-1 mt-1"></i>
                             Edit Survey
@@ -78,26 +84,27 @@
 
             <Card class="order-4 lg:order-3 row-span-2" style="animation-delay: 0.3s">
                 <template v-slot:title>
-                    <div class="flex justify-between items-center mb-3 px-2">
-                        <h3 class="text-2xl font-semibold">Latest Answers</h3>
-
-                        <a href="javascript:void(0)" class="text-sm text-blue-500 hover:decoration-blue-500">
-                            View all
-                        </a>
+                    <div class="flex justify-center items-center mb-3 px-2">
+                        <h3 class="text-2xl font-semibold">Latest Activity</h3>
                     </div>
                 </template>
 
-                <div v-if="data.latestAnswers?.length" class="text-left">
-                    <a href="#" v-for="answer of data.latestAnswers" :key="answer.id"
-                        class="block p-2 hover:bg-gray-100/90">
-                        <div class="font-semibold">{{ answer.survey.title }}</div>
-                        <small>
-                            Answer Made at:
-                            <i class="font-semibold">{{ answer.end_date }}</i>
-                        </small>
-                    </a>
+                <div v-if="data.surveyActivities?.length" class="text-left">
+                    <div v-for="activity of data.surveyActivities" :key="activity._id" class="block p-2 hover:bg-gray-100/90">
+                        <div class="font-semibold uppercase">{{ activity.title }}</div>
+                        <div class="flex flex-col">
+                            <span class="text-sm">
+                                Survey Created At:
+                                <i class="font-semibold">{{ formatDate(activity.createdAt) }} - {{ formatTime(activity.createdAt) }}</i>
+                            </span>
+                            <span class="text-sm">
+                                Survey Expiration Date:
+                                <i class="font-semibold">{{ formatDate(activity.expireDate) }} - {{ formatTime(activity.expireDate) }}</i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
-
+                
                 <div v-else class="text-gray-600 text-center py-16">
                     Your don't have answers yet
                 </div>

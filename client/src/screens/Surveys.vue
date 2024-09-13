@@ -7,6 +7,7 @@
 
     const surveys = computed(() => store.state.surveys.data);
     const loading = computed(() => store.state.surveys.loading);
+    const isAdmin = computed(() => store.state.user.isAdmin);
 
     store.dispatch('getSurveys');
 
@@ -41,7 +42,7 @@
         <template v-slot:header>
             <div class="flex justify-between items-center">
                 <h1 class="text-3xl font-bold text-gray-900 ">Surveys</h1>
-                <Button color="green" :to="{name: 'SurveyCreate'}">
+                <Button v-if="isAdmin" color="green" :to="{name: 'SurveyCreate'}">
                     <i class="pi pi-plus text-white text-lg mr-2"></i>
                     Add new Survey
                 </Button>

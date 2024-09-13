@@ -1,6 +1,9 @@
 <script setup>
+    import { computed } from 'vue';
     import Button from './Button.vue';
-    import { defineProps, defineEmits } from 'vue';
+    import store from '@/store';
+
+    const isAdmin = computed(() => store.state.user.isAdmin);
 
     const { survey } = defineProps({
         survey: {
@@ -18,13 +21,13 @@
         <h4 class="mt-4 text-lg font-bold">{{ survey.title }}</h4>
         <div v-html="survey.description" class="overflow-hidden flex-1"></div>
 
-        <div class="flex justify-between items-center mt-3">
+        <div v-if="isAdmin" class="flex justify-between items-center mt-3">
             <Button :to="{name: 'SurveyView', params: { id: survey._id } }">
                 <i class="pi pi-pen-to-square text-white text-lg mr-1"></i>
                 Edit
             </Button>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4 justify-end">
                 <Button :href="`/view/survey/${survey._id}`" circle color="green">
                     <i class="pi pi-external-link text-white text-lg"></i>
                 </Button>
@@ -33,6 +36,12 @@
                     <i class="pi pi-trash text-white text-lg"></i>
                 </Button>
             </div>
+        </div>
+
+        <div v-else  class="w-full flex justify-end">
+            <Button :href="`/view/survey/${survey._id}`" circle color="green">
+                <i class="pi pi-external-link text-white text-lg"></i>
+            </Button>
         </div>
     </div>
 </template>

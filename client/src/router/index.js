@@ -48,7 +48,7 @@ const routes = [
     },
     {
         path: '/404',
-        name: 'NotFound',
+        name: 'FourOhFour',
         component: FourOhFour,
     }
 ]

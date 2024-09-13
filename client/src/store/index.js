@@ -6,6 +6,7 @@ const store = createStore({
     user: {
       data: {},
       token: sessionStorage.getItem('TOKEN'),
+      isAdmin: false,
     },
     dashboard: {
       loading: false,
@@ -27,7 +28,11 @@ const store = createStore({
     },
   },
 
-  getters: {},
+  getters: {
+    isAdmin(state) {
+      return state.user.isAdmin;
+    },
+  },
 
   actions: {
     async register({ commit }, user) {
@@ -47,6 +52,7 @@ const store = createStore({
     async login({ commit }, user) {
       try {
         const { data } = await axiosClient.post('/auth/signin', user);
+        console.log(data);
         commit('setUser', data.user);
         commit('setToken', data.token);
         return data;
@@ -125,7 +131,7 @@ const store = createStore({
           },
         });
     
-        // console.log(response);
+        console.log(response);
         commit('setCurrentSurvey', response.data);
         return response;
       } catch (error) {
@@ -139,7 +145,7 @@ const store = createStore({
     
         formData.append('title', survey.title);
         formData.append('description', survey.description);
-        formData.append('expireDate', survey.expire_date);
+        formData.append('expireDate', survey.expireDate);
         formData.append('isActive', survey.status);
         formData.append('questions', JSON.stringify(survey.questions));
     
@@ -184,10 +190,12 @@ const store = createStore({
     logout(state) {
       state.user.token = null;
       state.user.data = {};
+      state.user.isAdmin = false;
       sessionStorage.removeItem('TOKEN');
     },
     setUser(state, user) {
       state.user.data = user;
+      state.user.isAdmin = user.isAdmin;
     },
     setToken(state, token) {
       state.user.token = token;
