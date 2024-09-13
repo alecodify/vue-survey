@@ -14,7 +14,7 @@ const Response = async (req, res) => {
         const existingResponse = survey.responses.find(response => response.user.toString() === req.user.id.toString());
 
         if (existingResponse) {
-            return res.status(400).json({ status: 'Failed', message: 'You have already submitted a response for this survey.' });
+            return res.status(409).json({ status: 'AlreadySubmitted', message: 'You have already submitted a response for this survey.' });
         }
 
         let response = {

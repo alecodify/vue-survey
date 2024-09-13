@@ -1,5 +1,5 @@
 import express from "express";
-import { imageUpload } from "../../middleware/imageUpload.js";
+import { upload } from "../../middleware/upload.js";
 import CreateSurvey from "./controllers/CreateSurvey.js";
 import verifyUser from '../../middleware/verifyUser.js'
 import verifyAdmin from '../../middleware/verifyAdmin.js'
@@ -13,9 +13,9 @@ import Dashboard from "./controllers/Dashboard.js";
 
 const surveyRoutes = express.Router();
 
-surveyRoutes.post('/create', verifyUser, verifyAdmin, imageUpload.single('image'), CreateSurvey);
+surveyRoutes.post('/create', verifyUser, verifyAdmin, upload.single('image'), CreateSurvey);
 surveyRoutes.post('/response/:id', verifyUser, Response);
-surveyRoutes.put('/:id', verifyUser, verifyAdmin, imageUpload.single('image'), UpdateSurvey)
+surveyRoutes.put('/:id', verifyUser, verifyAdmin, upload.single('image'), UpdateSurvey)
 
 surveyRoutes.get('/dashboard', Dashboard);
 surveyRoutes.get('/', GetSurveys);

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { uploadToCloudinary } from '../../../middleware/imageUpload.js';
 
 const CreateSurvey = async (req, res) => {
     const { title, description, expireDate, isActive, questions, image } = req.body;
