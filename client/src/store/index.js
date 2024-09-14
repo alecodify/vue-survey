@@ -104,6 +104,7 @@ const store = createStore({
       commit('setCurrentSurveyLoading', true);
       try {
         const { data } = await axiosClient.get(`/survey/${id}`);
+        // console.log(data);
         commit('setCurrentSurvey', data);
       } catch (error) {
         throw error;
@@ -112,18 +113,16 @@ const store = createStore({
       }
     },
     async saveSurvey({ commit }, survey) {
+      // console.log(survey);
       try {
         const formData = new FormData();
     
         formData.append('title', survey.title);
         formData.append('description', survey.description);
-        formData.append('expireDate', survey.expire_date);
+        formData.append('expireDate', survey.expireDate);
         formData.append('isActive', survey.status);
         formData.append('questions', JSON.stringify(survey.questions));
-    
-        if (survey.image) {
-          formData.append('image', survey.image);
-        }
+        formData.append('image', survey.image);
     
         let response = await axiosClient.post('/survey/create', formData, {
           headers: {
@@ -140,6 +139,7 @@ const store = createStore({
       }
     },
     async updateSurvey({ commit }, survey) {
+      // console.log(survey);
       try {
         const formData = new FormData();
     

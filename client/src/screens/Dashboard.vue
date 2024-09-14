@@ -51,7 +51,7 @@
             <Card class="order-3 lg:order-1 row-span-2" style="animation-delay: 0.2s">
                 <template v-slot:title>Latest Survey</template>
                 <div v-if="data.latestSurvey">
-                    <img :src="data.latestSurvey.image" class="w-[340px] mx-auto" alt="" />
+                    <img :src="data.latestSurvey.image" class="w-[340px] h-[300px] mx-auto" alt="" />
                     <h3 class="font-bold text-xl mb-3">{{ data.latestSurvey.title }}</h3>
                     <div class="flex justify-between text-sm mb-1">
                         <div>Create Date:</div>

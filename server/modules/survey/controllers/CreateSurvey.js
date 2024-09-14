@@ -1,15 +1,21 @@
 import mongoose from "mongoose";
+import { uploadToCloudinary } from "../../../middleware/upload.js";
 
 const CreateSurvey = async (req, res) => {
-    const { title, description, expireDate, isActive, questions, image } = req.body;
+    const { title, description, expireDate, isActive, questions } = req.body;
     const surveyModel = mongoose.model('survey');
 
     try {
+        let imageUrl;
+
+        const uploadResult = await uploadToCloudinary(req.file.buffer);
+        imageUrl = uploadResult.secure_url;
+        
 
         const newSurvey = await surveyModel.create({
             title,
             description,
-            image,
+            image: imageUrl,
             expireDate,
             isActive,
             questions: JSON.parse(questions),

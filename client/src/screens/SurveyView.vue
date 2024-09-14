@@ -17,12 +17,18 @@
         status: false,
         description: null,
         image: null,
-        expireDate: null,
+        imagePreview: null,
+        expireDate: "",
         questions: [],
     });
 
     watch(() => store.state.currentSurvey.data, (newVal, oldVal) => {
-        model.value = {...JSON.parse(JSON.stringify(newVal)), status: !!newVal.status}
+        model.value = {
+            ...JSON.parse(JSON.stringify(newVal)), 
+            status: !!newVal.status, 
+            expireDate: newVal.expireDate ? formatDateForInput(newVal.expireDate) : "",
+            imagePreview: newVal.image ? newVal.image : null,
+        }
     });
 
     if (route.params.id) {
@@ -34,7 +40,8 @@
 
         const reader = new FileReader();
         reader.onload = () => {
-            model.value.image = reader.result;
+            model.value.imagePreview = reader.result;
+            model.value.image = file;
             ev.target.value = "";
         };
         reader.readAsDataURL(file);
@@ -78,7 +85,11 @@
     }
 
     function saveSurvey() {
-        store.dispatch("saveSurvey", { ...model.value }).then((response) => {
+        const payload = {
+            ...model.value,
+            expireDate: convertToISODate(model.value.expireDate),
+        };
+        store.dispatch("saveSurvey", payload).then((response) => {
             if (response.data.status === 'Success') {
                 store.commit("notify", { type: "success",  message: "The survey was successfully "});
                 router.push({ name: "Surveys" });
@@ -89,7 +100,11 @@
     }
 
     function updateSurvey() {
-        store.dispatch("updateSurvey", { ...model.value }).then((response) => {
+        const payload = {
+            ...model.value,
+            expireDate: convertToISODate(model.value.expireDate),
+        };
+        store.dispatch("updateSurvey", payload).then((response) => {
             if (response.data.status === 'Success') {
                 store.commit("notify", { type: "success",  message: "The survey updated successfully " });
                 router.push({ name: "Surveys" });
@@ -105,6 +120,16 @@
                 router.push({ name: "Surveys" });
             });
         }
+    }
+
+    function formatDateForInput(isoDate) {
+        const date = new Date(isoDate);
+        return date.toISOString().split('T')[0];
+    }
+
+    function convertToISODate(dateString) {
+        const [year, month, day] = dateString.split('-');
+        return new Date(year, month - 1, day).toISOString();
     }
 
 </script>
@@ -131,19 +156,19 @@
 
         <div v-if="surveyLoading" class="flex justify-center">Loading...</div>
 
-        <form v-else @submit.prevent="handleSubmit" class="animate-fade-in-down">
+        <form v-else @submit.prevent="handleSubmit" class="animate-fade-in-down" enctype="multipart/form-data">
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700"> Image </label>
                         <div class="mt-1 flex items-center">
-                          <img v-if="model.image" :src="model.image" :alt="model.title" class="w-64 h-48 object-cover" />
+                          <img v-if="model.imagePreview" :src="model.imagePreview" :alt="model.title" class="w-64 h-48 object-cover" />
                           <span v-else class="flex items-center justify-center h-12 w-12 rounded-full overflow-hidden bg-gray-100" >
                             <i class="pi pi-image text-xl text-gray-500 "></i>
                           </span>
                           
                           <button type="button" class="relative overflow-hidden ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" >
-                            <input type="file" @change="onImageChoose" class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer" />
+                            <input type="file" @change="onImageChoose" name="image" class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer" />
                             Change
                           </button>
                         </div>
