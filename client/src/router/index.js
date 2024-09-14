@@ -8,6 +8,7 @@ import Dashboard from '@/screens/Dashboard.vue';
 import Surveys from '@/screens/Surveys.vue';
 import SurveyView from '@/screens/SurveyView.vue';
 import SurveyViewPublic from '@/screens/SurveyViewPublic.vue';
+import Result from '@/screens/Result.vue';
 
 const routes = [
     {
@@ -20,6 +21,7 @@ const routes = [
             {path: '/surveys', name: 'Surveys', component: Surveys},
             {path: '/surveys/create', name: 'SurveyCreate', component: SurveyView},
             {path: '/surveys/:id', name: 'SurveyView', component: SurveyView},
+            {path: '/surveys/result/:id', name: 'Result', component: Result},
         ]
     },
     {

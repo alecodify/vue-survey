@@ -26,6 +26,10 @@ const store = createStore({
       type: 'success',
       message: '',
     },
+    surveyResults: {
+      data: [],
+      loading: false,
+    },
   },
 
   getters: {
@@ -184,6 +188,20 @@ const store = createStore({
         throw error;
       }
     },
+    async getSurveyResults({ commit }, surveyId) {
+      console.log(surveyId);
+      commit('setSurveyResultsLoading', true);
+      try {
+        const { data } = await axiosClient.get(`/survey/result/${surveyId}`);
+        commit('setSurveyResults', data);
+        console.log(data);
+        return data;
+      } catch (error) {
+        throw error;
+      } finally {
+        commit('setSurveyResultsLoading', false);
+      }
+    },
   },
 
   mutations: {
@@ -226,6 +244,12 @@ const store = createStore({
       setTimeout(() => {
         state.notification.show = false;
       }, 3000);
+    },
+    setSurveyResultsLoading(state, loading) {
+      state.surveyResults.loading = loading;
+    },
+    setSurveyResults(state, data) {
+      state.surveyResults.data = data;
     },
   },
 

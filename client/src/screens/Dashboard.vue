@@ -42,9 +42,9 @@
             </Card>
 
             <Card class="order-2 lg:order-4" style="animation-delay: 0.2s">
-                <template v-slot:title>Total Answers</template>
+                <template v-slot:title>Total Answers <span class="text-xs">Latest Survey</span> </template>
                 <div class="text-8xl pb-4 font-semibold flex-1 flex items-center justify-center">
-                    {{ data.totalAnswers }}
+                    {{ data.totalAnswers - 1 }}
                 </div>
             </Card>
 
