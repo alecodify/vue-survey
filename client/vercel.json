@@ -3,18 +3,6 @@
     {
       "src": "/api/(.*)",
       "dest": "https://vue-survey-server.vercel.app/api/$1"
-    },
-    {
-      "src": "/view/survey/([^/]+)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/surveys/result/([^/]+)",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
     }
   ]
 }
