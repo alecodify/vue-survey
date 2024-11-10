@@ -1,0 +1,9 @@
+{
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "https://vue-survey-server.vercel.app/api/$1"
+      }
+    ]
+}
+  
