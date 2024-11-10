@@ -16,7 +16,11 @@ app.use(errorHandler);
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser()); 
-app.use(cors({ origin: 'http://localhost:5173' }))
+app.use(cors({ 
+  origin: ['http://localhost:5173', 'https://vue-survey-client.vercel.app/'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}))
 
 app.use((req,res,next)=>{
     console.log(`Incomming ${req.method} Request on URL : ${req.url}`);
