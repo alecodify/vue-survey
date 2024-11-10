@@ -189,12 +189,11 @@ const store = createStore({
       }
     },
     async getSurveyResults({ commit }, surveyId) {
-      console.log(surveyId);
+      // console.log(surveyId);
       commit('setSurveyResultsLoading', true);
       try {
         const { data } = await axiosClient.get(`/survey/result/${surveyId}`);
         commit('setSurveyResults', data);
-        console.log(data);
         return data;
       } catch (error) {
         throw error;
