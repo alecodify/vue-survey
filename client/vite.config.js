@@ -11,7 +11,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://vue-survey-server.vercel.app/'
+        target: 'https://vue-survey-server.vercel.app/',
+        changeOrigin: true,
+        secure: false,
       }
     }
   },
